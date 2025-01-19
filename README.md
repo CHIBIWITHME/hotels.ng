@@ -1,13 +1,13 @@
-# hotels.ng
-# Web scraping - hotels
-# This code scrapes hotels.ng for hotels in Lagos, Nigeria
+#hotels.ng
+#Web scraping - hotels
+#This code scrapes hotels.ng for hotels in Lagos, Nigeria
 
 import time
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 
-# Initialize variables
+#Initialize variables
 base_url = 'https://hotels.ng/hotels-in-lagos'
 next_page = 1
 hotel_details = []
@@ -74,7 +74,7 @@ while True:
         print(f"An error occurred: {e}")
         break
 
-# Save data to CSV
+#Save data to CSV
 df = pd.DataFrame(hotel_details)
 df.to_csv('lagos_hotels.csv', index=False)
 print("Scraping completed. Data saved to 'lagos_hotels.csv'.")
