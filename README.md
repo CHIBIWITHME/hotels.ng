@@ -1,80 +1,48 @@
-#hotels.ng
-#Web scraping - hotels
-#This code scrapes hotels.ng for hotels in Lagos, Nigeria
+## *Lagos Hotels Data Scraper*  
 
-import time
-import requests
-from bs4 import BeautifulSoup
-import pandas as pd
+### **Project Overview**  
+This simple project scrapes hotel information from <a href="https://hotels.ng/hotels-in-lagos" target="_blank">Hotels.ng</a> for all listed hotels located in Lagos, Nigeria.
 
-#Initialize variables
-base_url = 'https://hotels.ng/hotels-in-lagos'
-next_page = 1
-hotel_details = []
+### **Project Description**
+This project utilizes Python's `requests` library and `Beautiful Soup` to extract hotel data from <a href="https://hotels.ng/hotels-in-lagos" target="_blank">Hotels.ng</a> website, specifically focusing on hotels located in Lagos, Nigeria. The scraped data includes hotel names, addresses, prices, ratings, and other relevant details.   
 
-while True:
-    try:
-        # Fetch the page
-        url = f'{base_url}/{next_page}'
-        response = requests.get(url)
-        if response.status_code != 200:
-            print(f"Failed to fetch page {next_page}. Status code: {response.status_code}")
-            break
-        
-        soup = BeautifulSoup(response.text, 'lxml')
+### **Problem Statement**  
+The hospitality industry in Lagos, Nigeria, is rapidly growing, with a wide range of hotels catering to diverse needs. However, there is a lack of readily available, consolidated data on hotel pricing, locations, ratings, facilities, etc. This makes it difficult for potential customers to make informed decisions and for businesses to conduct effective market research. This project aims to address this gap by scraping and compiling hotel data from <a href="https://hotels.ng/hotels-in-lagos" target="_blank">Hotels.ng</a>, providing a valuable resource for both consumers and businesses. 
 
-        # Find all hotels on the current page
-        hotels = soup.find_all('div', class_='listing-hotels')
-        if not hotels:
-            print("No more hotels found. Ending scrape.")
-            break
+---
+### Technologies Used
+* Python: Core programming language.
+* BeautifulSoup: For parsing HTML and extracting data.
+* Requests: For making HTTP requests.
+* Pandas: For exporting to CSV.
 
-        for hotel in hotels:
-            # Extract hotel details
-            hotel_name = hotel.find('h2', itemprop='name')
-            hotel_name = hotel_name.text.strip() if hotel_name else 'Missing'
+### Data Fields
+The scraped data includes the following fields:
+* Hotel Name
+* Address
+* Price
+* Rating
+* Review
+* Facilities
 
-            hotel_address = hotel.find('p', itemprop='address')
-            if hotel_address:
-                address_parts = hotel_address.text.split()
-                hotel_area = " ".join(address_parts[:2]).replace(',', '') if len(address_parts) > 1 else 'Missing'
-                hotel_street = " ".join(address_parts[2:]).strip('- ') if len(address_parts) > 2 else 'Missing'
-            else:
-                hotel_area = 'Missing'
-                hotel_street = 'Missing'
+### Data Output
+The data is saved into a `.csv` file, that can be used for analysis.
 
-            hotel_price = hotel.find('p', class_='listing-hotels-prices-discount')
-            hotel_price = hotel_price.text.strip().split()[0] if hotel_price else 'Missing'
+### How It Works
 
-            hotel_rating = hotel.find('p', class_='listing-hotels-rating')
-            hotel_rating = hotel_rating.text.strip().split()[0] if hotel_rating else 'Missing'
+* Sends requests to <a href="https://hotels.ng/hotels-in-lagos" target="_blank">Hotels.ng</a> and retrieves HTML content.
+* Parses hotel details using BeautifulSoup.
+* Iterates through all pages to capture complete hotel listings.
+* Saves the collected data into a CSV file for easy access.
 
-            hotel_review = hotel.find('p', class_='listing-hotels-rating-number')
-            hotel_review = " ".join(hotel_review.text.strip().split()[1:]) if hotel_review else 'Missing'
+### Limitations
+The scraper is dependent on the structure of the <a href="https://hotels.ng/hotels-in-lagos" target="_blank">Hotels.ng</a> website. Changes to the website may require updates to the scraper.
 
-            hotel_facilities = hotel.find('div', class_='listing-hotels-facilities d-none d-md-flex')
-            hotel_facilities = ", ".join(hotel_facilities.text.split()) if hotel_facilities else 'Missing'
+---
 
-            # Append to list
-            hotel_details.append({
-                'Name': hotel_name,
-                'Area': hotel_area,
-                'Street': hotel_street,
-                'Price': hotel_price,
-                'Rating': hotel_rating,
-                'Reviews': hotel_review,
-                'Facilities': hotel_facilities
-            })
+### Author
+*UGWUANYI, ANTHONY C.*
 
-        print(f"Scraped page {next_page}.")
-        next_page += 1
-        time.sleep(2)  # Avoid overloading the server
+**LinkedIn:** <a href="https://www.linkedin.com/in/chibi-ugwuanyi-663835252/" target="_blank">chibi-ugwuanyi-663835252/</a>
 
-    except Exception as e:
-        print(f"An error occurred: {e}")
-        break
-
-#Save data to CSV
-df = pd.DataFrame(hotel_details)
-df.to_csv('lagos_hotels.csv', index=False)
-print("Scraping completed. Data saved to 'lagos_hotels.csv'.")
+**E-mail:** <a href="https://mail.google.com" target="_blank">chibiugwuanyi@gmail.com</a>
